@@ -1,0 +1,11 @@
+streamlit
+chromadb
+sentence-transformers
+pymupdf
+beautifulsoup4
+openai
+pandas
+pydantic
+sqlalchemy
+python-dotenv
+rapidfuzz

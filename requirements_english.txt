@@ -1,0 +1,62 @@
+{
+  "documentName": "Guideline assessment form course descriptions 2025.docx",
+  "title": "Guideline assessment form examination board - course descriptions 2025-2026",
+  "language": "en",
+  "description": "The assessment form included with the courses in the course catalogue must meet the following points:",
+  "requirements": [
+    {
+      "id": "exam_assessment_method",
+      "text": "A description of the assessment method (including the type of questions) of the exam is included, including the weighting factor of the partial exams and the final exam;"
+    },
+    {
+      "id": "resit_assessment_method",
+      "text": "A description of the assessment method of the resit is included, including the weighting factor of any partial exams that count towards the resit;"
+    },
+    {
+      "id": "duration_exam",
+      "text": "The duration of the exam is indicated;"
+    },
+    {
+      "id": "individual_or_group_work",
+      "text": "It is clearly stated whether a test is individual or whether it involves group work;"
+    },
+    {
+      "id": "individual_performance_minimum",
+      "text": "Examinations must consist of at least 60% individually assessed performance;"
+    },
+    {
+      "id": "uncontrolled_conditions_maximum",
+      "text": "Examinations may take place for a maximum of 25% under circumstances not controlled by the EB (such as take home assignments or quizzes during lectures and tutorials);",
+      "subpoints": [
+        {
+          "id": "critical_questioning_requirement",
+          "text": "If this is not the case (for example with theses or other writing courses), it must be stated that all students will be subjected to critical questioning in accordance with 6.8.2 or 6.8.4 R&R."
+        },
+        {
+          "id": "ai_checklist_and_partial_questioning",
+          "text": "The 25% must be completed in accordance with the AI checklist, meaning that each individual assignment may have a maximum weight of 20%. (A partial questioning must also take place, but doing so when providing the assignment can also be arranged, see 6.8 R&R)"
+        }
+      ]
+    },
+    {
+      "id": "attendance_no_points",
+      "text": "Attendance per se may not be awarded points, nor may attendance be required as a condition for completing the course (unless a teaching method has been chosen where the learning objectives cannot be achieved if not all students are present. In that case, it must also be indicated how the student can still meet the requirements in case of force majeure, etc.)"
+    },
+    {
+      "id": "minimum_requirement_final_exam",
+      "text": "To successfully complete the course, at least a 5.00 must be achieved for the final exam of each course (if the examination consists purely of centrally administered exams) or a 5.50 (if the examination includes a component that takes place under uncontrolled conditions);"
+    },
+    {
+      "id": "validity_period_partial_results",
+      "text": "The validity period of partial results is included and complies with Article 4.9 paragraph 2 of the TER, which reads as follows: \"the result of a partial exam is valid up to and including the first final exam offered. If partial exams (partially) test other skills than the final exam, it may be determined that they are valid up to and including the resit, provided that the student still has a reasonable chance of passing the course\" *in practice, a weighting of at least 70% of the resittable part is considered reasonable.*"
+    },
+    {
+      "id": "bonus_scheme_condition",
+      "text": "If a bonus scheme is included, it is stated that the bonus is only awarded if the final grade without the bonus is at least a 5.50 or higher;"
+    },
+    {
+      "id": "bonus_scheme_maximum",
+      "text": "The bonus may contain a maximum of 0.5 points and expires at the end of the academic year."
+    }
+  ]
+}
