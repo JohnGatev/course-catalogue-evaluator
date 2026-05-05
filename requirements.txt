@@ -1,5 +1,5 @@
 streamlit
-chromadb
+chromadb==0.5.23
 sentence-transformers
 pymupdf
 beautifulsoup4
