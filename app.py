@@ -221,24 +221,31 @@ if 'courses' not in st.session_state:
 if 'current_idx' not in st.session_state:
     st.session_state.current_idx = 0
 
+def _read_text_file(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
 def initialize_defaults():
     if not get_setting("system_prompt"):
-        if os.path.exists("system_prompt_english.pdf"):
-            text = extract_text("system_prompt_english.pdf")
-            save_setting("system_prompt", text)
+        if os.path.exists("system_prompt_english.txt"):
+            save_setting("system_prompt", _read_text_file("system_prompt_english.txt"))
+        elif os.path.exists("system_prompt_english.pdf"):
+            save_setting("system_prompt", extract_text("system_prompt_english.pdf"))
         else:
-            default_sys = "You are an expert evaluator for university courses."
-            save_setting("system_prompt", default_sys)
-            
+            save_setting("system_prompt", "You are an expert evaluator for university courses.")
+
     if not get_setting("requirements_text"):
-        if os.path.exists("requirements_english.pdf"):
+        if os.path.exists("requirements_english.txt"):
+            text = _read_text_file("requirements_english.txt")
+            save_setting("requirements_text", text)
+            embed_requirements(text)
+        elif os.path.exists("requirements_english.pdf"):
             text = extract_text("requirements_english.pdf")
             save_setting("requirements_text", text)
             embed_requirements(text)
         else:
-            default_reqs = "1. Default requirement"
-            save_setting("requirements_text", default_reqs)
-            embed_requirements(default_reqs)
+            save_setting("requirements_text", "1. Default requirement")
+            embed_requirements("1. Default requirement")
 
 initialize_defaults()
 
