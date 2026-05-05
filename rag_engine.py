@@ -1,103 +1,85 @@
-import os
-import chromadb
-from chromadb.utils import embedding_functions
 import hashlib
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
-# Persistent DB path
-CHROMA_PATH = "chroma_db"
-client = chromadb.PersistentClient(path=CHROMA_PATH)
+_model = None
+# Module-level stores persist within a Streamlit session
+_req_store = {"chunks": [], "embeddings": None}
+_course_store = {}  # course_id -> {"chunks": [...], "embeddings": np.ndarray}
 
-# Using sentence-transformers' fast and small model for local execution without API keys
-emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 
-def get_collection(name):
-    return client.get_or_create_collection(name=name, embedding_function=emb_fn)
+def _get_model():
+    global _model
+    if _model is None:
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
 
-def delete_collection(name):
-    try:
-        client.delete_collection(name)
-    except Exception:
-        pass
 
 def simple_chunker(text, chunk_size=1000, overlap=200):
     chunks = []
     start = 0
     text_length = len(text)
-    
     while start < text_length:
         end = min(start + chunk_size, text_length)
         chunks.append(text[start:end])
         if start + chunk_size >= text_length:
             break
-        start += (chunk_size - overlap)
-        
+        start += chunk_size - overlap
     return chunks
 
+
 def embed_requirements(text):
-    """Embed the requirements text. Since there's one set of requirements, we overwrite."""
-    delete_collection("requirements")
-    col = get_collection("requirements")
-    
+    global _req_store
     chunks = simple_chunker(text, chunk_size=800, overlap=150)
     if not chunks:
+        _req_store = {"chunks": [], "embeddings": None}
         return
-    
-    docs = chunks
-    ids = [f"req_{i}" for i in range(len(chunks))]
-    col.add(documents=docs, ids=ids)
+    embeddings = _get_model().encode(chunks, convert_to_numpy=True)
+    _req_store = {"chunks": chunks, "embeddings": embeddings}
+
 
 def embed_course_content(course_id, text):
-    """Embed course content. Skips if already embedded (content hash = stable ID)."""
-    col = get_collection(f"course_{course_id}")
-    if col.count() > 0:
+    if course_id in _course_store:
         return
-
     chunks = simple_chunker(text, chunk_size=1500, overlap=200)
     if not chunks:
         return
+    embeddings = _get_model().encode(chunks, convert_to_numpy=True)
+    _course_store[course_id] = {"chunks": chunks, "embeddings": embeddings}
 
-    ids = [f"course_{course_id}_{i}" for i in range(len(chunks))]
-    col.add(documents=chunks, ids=ids)
+
+def _cosine_query(query_text, chunks, embeddings, n_results):
+    if embeddings is None or not chunks:
+        return []
+    q = _get_model().encode([query_text], convert_to_numpy=True)[0]
+    norms = np.linalg.norm(embeddings, axis=1) * np.linalg.norm(q)
+    norms = np.where(norms == 0, 1e-10, norms)
+    scores = (embeddings @ q) / norms
+    top_k = min(n_results, len(chunks))
+    top_idx = np.argsort(scores)[::-1][:top_k]
+    return [chunks[i] for i in top_idx]
+
 
 def query_requirements(query_text, n_results=3):
-    col = get_collection("requirements")
-    if col.count() == 0:
-        return []
-        
-    res = col.query(query_texts=[query_text], n_results=min(n_results, col.count()))
-    if res and res["documents"] and len(res["documents"]) > 0:
-        return res["documents"][0]
-    return []
+    return _cosine_query(query_text, _req_store["chunks"], _req_store["embeddings"], n_results)
+
 
 def query_course_content(course_id, query_text, n_results=5):
-    col = get_collection(f"course_{course_id}")
-    if col.count() == 0:
+    if course_id not in _course_store:
         return []
-        
-    res = col.query(query_texts=[query_text], n_results=min(n_results, col.count()))
-    if res and res["documents"] and len(res["documents"]) > 0:
-        return res["documents"][0]
-    return []
+    s = _course_store[course_id]
+    return _cosine_query(query_text, s["chunks"], s["embeddings"], n_results)
+
 
 def get_full_requirements_text():
-    """Retrieve all requirements chunks."""
-    col = get_collection("requirements")
-    if col.count() == 0:
-        return ""
-    res = col.get()
-    if res and res["documents"]:
-        return "\n\n".join(res["documents"])
-    return ""
+    return "\n\n".join(_req_store["chunks"])
+
 
 def get_full_course_text(course_id):
-    """Retrieve all course chunks."""
-    col = get_collection(f"course_{course_id}")
-    if col.count() == 0:
+    if course_id not in _course_store:
         return ""
-    res = col.get()
-    if res and res["documents"]:
-        return "\n\n".join(res["documents"])
-    return ""
+    return "\n\n".join(_course_store[course_id]["chunks"])
 
-def generate_course_id(name):
-    return hashlib.md5(name.encode('utf-8')).hexdigest()
+
+def generate_course_id(text):
+    return hashlib.md5(text.encode("utf-8")).hexdigest()

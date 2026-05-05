@@ -1,6 +1,6 @@
 streamlit
-chromadb==0.5.23
 sentence-transformers
+numpy
 pymupdf
 beautifulsoup4
 openai
