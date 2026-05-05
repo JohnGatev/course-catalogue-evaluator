@@ -53,13 +53,21 @@ RULE — Exam weight and 60% supervised assessment threshold:
   • Not Met (no breakdown stated at all) → 'Information not present'.
 
 RULE — Validity of partial results (criterion referencing TER Article 4.9 or partial exam validity):
-  • This is a SINGLE criterion. Do not split it across multiple rows regardless of how long the requirement text is. Represent it as one row with one complete criterion name.
-  • Evaluate whether the syllabus states the validity period of partial results in compliance with the rule. Quote the relevant sentence if present.
+  • This is a SINGLE criterion. Do not split it across multiple rows. Represent it as one row with the complete criterion name.
+  • Step 1 — Search the entire syllabus for ANY sentence that mentions how long partial results / assignment grades / partial exam results remain valid (phrases like "valid within", "remain valid", "validity", "results are kept", "carried over").
+  • Step 2 — If NO such sentence exists anywhere: Not Met, quote 'Information not present'.
+  • Step 3 — If a validity sentence IS found: compare it to what TER 4.9 requires. If it matches: Met. If it deviates (e.g. says "within the same academic year" instead of "up to and including the first final exam offered"): mark Partial and quote the EXACT deviating sentence from the syllabus. Do NOT mark 'Information not present' when a validity statement exists — even a non-compliant one is present information.
 
 RULE — Criterion about the maximum percentage of assessments not controlled by the EB (e.g. "25% cap on uncontrolled assessments"):
-  • Per the EB-control default above, all exams/tests/midterms/finals are assumed EB-controlled.
-  • If ALL graded components (those with a stated weight) are exam-type and therefore EB-controlled by default, mark this criterion N/A — the cap simply does not apply when there are zero uncontrolled graded components. Leave quote empty.
-  • Only evaluate as Met/Partial/Not Met when the syllabus includes at least one graded component that is explicitly uncontrolled (take-home, tutorial quiz, assignment with weight, participation grade, etc.).
+  • UNCONTROLLED components (always, by definition): individual assignments, programming assignments, group projects, papers, presentations, portfolios, take-home work, participation grades, tutorial quizzes — any graded component that students complete outside a proctored exam hall.
+  • CONTROLLED components (by default): written exams, oral exams, midterms, finals, tests held in exam halls.
+  • Step 1 — Sum the weights of all UNCONTROLLED graded components (those with a stated weight).
+  • Step 2 — If uncontrolled total = 0%: mark N/A (the cap does not apply). If uncontrolled total > 0% but ≤ 25%: Met — quote the assessment breakdown. If uncontrolled total > 25%: Not Met — quote the assessment breakdown showing the excess.
+  • Example: individual assignments 20% + group project 20% = 40% uncontrolled → Not Met (40% > 25%).
+
+RULE — Criteria that are conditional on criterion 6 (the 25% cap):
+  • Criteria that apply ONLY when uncontrolled components exceed 25% (e.g. "critical questioning requirement", "AI checklist per-assignment cap") must be evaluated — NOT marked N/A — whenever the uncontrolled total exceeds 25%.
+  • Mark them N/A only when uncontrolled total = 0% (exam-only course).
 
 RULE — Criterion deduplication (STRICT):
   • The requirements text may repeat the same criterion due to formatting or chunking. Before writing any row, scan all criteria you have already identified. If the new criterion starts with the same phrase or describes the same topic as an existing row, it is a duplicate — merge them into ONE row using the most complete version of the criterion text.
@@ -75,7 +83,7 @@ RULE — Criterion deduplication (STRICT):
   "requirements_compliance_table": [
     {
       "criterion": "Full, untruncated name of the requirement criterion. Never abbreviate or cut off the criterion text.",
-      "status": "One of: Met, Not Met, Partial, N/A.",
+      "status": "One of: Met, Not Met, Partial, N/A. Use PARTIAL — not Not Met — when the required information is partially present but incomplete (e.g. weight and duration stated but question type missing; resit described but format not specified). Use Not Met only when the required information is entirely absent or directly contradicts the requirement. Never collapse Partial into Not Met.",
       "quote": "REQUIRED for all rows except N/A. Copy characters exactly as they appear in the syllabus — no ellipses (...), no paraphrasing, no summarising, no concatenating sentences from different locations. If multiple sentences are relevant, pick the SINGLE most relevant sentence or continuous passage. Met → EXACT verbatim proof from syllabus. Partial → EXACT verbatim text showing incomplete compliance. Not Met (absent) → literal string 'Information not present'. Not Met (wrong/insufficient) → EXACT verbatim deviating text. N/A → empty string."
     }
   ],
