@@ -2,61 +2,136 @@
   "documentName": "Guideline assessment form course descriptions 2025.docx",
   "title": "Guideline assessment form examination board - course descriptions 2025-2026",
   "language": "en",
-  "description": "The assessment form included with the courses in the course catalogue must meet the following points:",
+  "description": "The assessment form included with the courses in the course catalogue must meet the following points. Each requirement carries machine-usable applicability fields (na_when / applies_when / depends_on / course_type_na). When a na_when or applies_when trigger fires, mark the requirement N/A rather than Not Met.",
+  "componentControlMatrix": {
+    "note": "Use these keyword groups to classify every graded component that has a stated weight. A component is CONTROLLED if it is supervised/invigilated, UNCONTROLLED if students complete it outside supervision. In-class / short / continuous tests taken during class under supervision are CONTROLLED, not uncontrolled.",
+    "controlled": [
+      "written exam", "oral exam", "midterm", "mid-term", "end-term", "endterm",
+      "final exam", "final examination", "individual exam", "examination",
+      "in-class test", "in class test", "short test", "continuous assessment in class",
+      "on-site exam", "on site exam", "digital on-site exam", "closed book",
+      "invigilated", "proctored", "tentamen", "digitaal tentamen"
+    ],
+    "uncontrolled": [
+      "take-home", "take home", "homework", "assignment", "programming assignment",
+      "paper", "essay", "project", "portfolio", "presentation", "case study",
+      "group work", "group case", "group project", "quiz during", "tutorial quiz",
+      "quizzes during lectures", "quizzes during tutorials", "lab quiz", "PC lab quiz"
+    ]
+  },
+  "courseTypes": {
+    "note": "Detect course type before grading. For thesis / writing / research-project courses, requirements whose course_type_na lists that type are automatically N/A; typically only critical_questioning_requirement (and academic-integrity statements) remain relevant.",
+    "values": ["exam_only", "mixed", "thesis", "writing", "research_project"]
+  },
   "requirements": [
     {
       "id": "exam_assessment_method",
-      "text": "A description of the assessment method (including the type of questions) of the exam is included, including the weighting factor of the partial exams and the final exam;"
+      "number": 1,
+      "text": "A description of the assessment method (including the type of questions) of the exam is included, including the weighting factor of the partial exams and the final exam;",
+      "met_when": "The assessment method, the type of questions for the exam component(s), and the weighting factors of partial and final exams are stated. The question type only needs to be given for exam-type components, not for assignments/projects.",
+      "na_when": null,
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "resit_assessment_method",
-      "text": "A description of the assessment method of the resit is included, including the weighting factor of any partial exams that count towards the resit;"
+      "number": 2,
+      "text": "A description of the assessment method of the resit is included, including the weighting factor of any partial exams that count towards the resit;",
+      "met_when": "The resit method and weighting are described. If the text states the resit has the SAME format as the original/regular exam, that satisfies this requirement (the original exam's method applies). If exam_assessment_method is Met and the resit mirrors it, mark Met.",
+      "depends_on": "exam_assessment_method",
+      "na_when": "course has no exam/partial component that can be resat",
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "duration_exam",
-      "text": "The duration of the exam is indicated;"
+      "number": 3,
+      "text": "The duration of the exam is indicated;",
+      "met_when": "A duration (e.g. 'two-hour', '1.5-hour') is stated for the timed exam component(s).",
+      "na_when": "the course has no timed/invigilated exam component (e.g. thesis, writing course, continuous-assessment-only or assignment-only course)",
+      "course_type_na": ["thesis", "writing", "research_project"]
     },
     {
       "id": "individual_or_group_work",
-      "text": "It is clearly stated whether a test is individual or whether it involves group work;"
+      "number": 4,
+      "text": "It is clearly stated whether a test is individual or whether it involves group work;",
+      "met_when": "Each graded component is identifiable as individual or group. A component explicitly labelled 'group ...' (e.g. 'group case', '100% group case') or 'individual ...' satisfies this directly. Exam-type components default to individual unless stated otherwise.",
+      "na_when": null,
+      "course_type_na": []
     },
     {
       "id": "individual_performance_minimum",
-      "text": "Examinations must consist of at least 60% individually assessed performance;"
+      "number": 5,
+      "text": "Examinations must consist of at least 60% individually assessed performance;",
+      "met_when": "The summed weight of individually-assessed components (exams default to individual) is at least 60%.",
+      "na_when": null,
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "uncontrolled_conditions_maximum",
+      "number": 6,
       "text": "Examinations may take place for a maximum of 25% under circumstances not controlled by the EB (such as take home assignments or quizzes during lectures and tutorials);",
+      "met_when": "The summed weight of UNCONTROLLED components (per componentControlMatrix) is greater than 0% and at most 25%.",
+      "na_when": "no uncontrolled components at all (uncontrolled total = 0%, e.g. 100% controlled/on-site exam)",
+      "course_type_na": [],
       "subpoints": [
         {
           "id": "critical_questioning_requirement",
-          "text": "If this is not the case (for example with theses or other writing courses), it must be stated that all students will be subjected to critical questioning in accordance with 6.8.2 or 6.8.4 R&R."
+          "number": 7,
+          "text": "If this is not the case (for example with theses or other writing courses), it must be stated that all students will be subjected to critical questioning in accordance with 6.8.2 or 6.8.4 R&R.",
+          "met_when": "When uncontrolled assessment exceeds 25%, the text states that all students are subjected to critical questioning per 6.8.2 / 6.8.4 R&R.",
+          "applies_when": "uncontrolled assessment > 25%",
+          "na_when": "uncontrolled assessment is 25% or less (the requirement does not apply)",
+          "course_type_na": []
         },
         {
           "id": "ai_checklist_and_partial_questioning",
-          "text": "The 25% must be completed in accordance with the AI checklist, meaning that each individual assignment may have a maximum weight of 20%. (A partial questioning must also take place, but doing so when providing the assignment can also be arranged, see 6.8 R&R)"
+          "number": 8,
+          "text": "The 25% must be completed in accordance with the AI checklist, meaning that each individual assignment may have a maximum weight of 20%. (A partial questioning must also take place, but doing so when providing the assignment can also be arranged, see 6.8 R&R)",
+          "met_when": "When uncontrolled assessment exceeds 25%, each individual uncontrolled assignment weighs at most 20% and partial questioning is arranged.",
+          "applies_when": "uncontrolled assessment > 25%",
+          "na_when": "uncontrolled assessment is 25% or less (the requirement does not apply)",
+          "course_type_na": []
         }
       ]
     },
     {
       "id": "attendance_no_points",
-      "text": "Attendance per se may not be awarded points, nor may attendance be required as a condition for completing the course (unless a teaching method has been chosen where the learning objectives cannot be achieved if not all students are present. In that case, it must also be indicated how the student can still meet the requirements in case of force majeure, etc.)"
+      "number": 9,
+      "text": "Attendance per se may not be awarded points, nor may attendance be required as a condition for completing the course (unless a teaching method has been chosen where the learning objectives cannot be achieved if not all students are present. In that case, it must also be indicated how the student can still meet the requirements in case of force majeure, etc.)",
+      "met_when": "Attendance is mentioned as mandatory/graded AND it complies (no points purely for attendance; force-majeure route described where presence is essential).",
+      "na_when": "the syllabus does not mention any attendance requirement, participation grade, or compulsory presence (this is a prohibition, not a statement that must be present)",
+      "course_type_na": []
     },
     {
       "id": "minimum_requirement_final_exam",
-      "text": "To successfully complete the course, at least a 5.00 must be achieved for the final exam of each course (if the examination consists purely of centrally administered exams) or a 5.50 (if the examination includes a component that takes place under uncontrolled conditions);"
+      "number": 10,
+      "text": "To successfully complete the course, at least a 5.00 must be achieved for the final exam of each course (if the examination consists purely of centrally administered exams) or a 5.50 (if the examination includes a component that takes place under uncontrolled conditions);",
+      "met_when": "Any explicit minimum grade threshold (5.00 / 5.50) is stated for the relevant component(s) or the weighted average. Do not require the literal phrase 'final exam' when the course has no single final exam; a stated 5.5 minimum on assignments or on the weighted average satisfies this.",
+      "na_when": null,
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "validity_period_partial_results",
-      "text": "The validity period of partial results is included and complies with Article 4.9 paragraph 2 of the TER, which reads as follows: \"the result of a partial exam is valid up to and including the first final exam offered. If partial exams (partially) test other skills than the final exam, it may be determined that they are valid up to and including the resit, provided that the student still has a reasonable chance of passing the course\" *in practice, a weighting of at least 70% of the resittable part is considered reasonable.*"
+      "number": 11,
+      "text": "The validity period of partial results is included and complies with Article 4.9 paragraph 2 of the TER, which reads as follows: \"the result of a partial exam is valid up to and including the first final exam offered. If partial exams (partially) test other skills than the final exam, it may be determined that they are valid up to and including the resit, provided that the student still has a reasonable chance of passing the course\" *in practice, a weighting of at least 70% of the resittable part is considered reasonable.*",
+      "met_when": "A validity statement exists. It is compliant if it matches 'up to and including the first final exam offered', OR the partial exams test other skills than the final exam AND the resittable part is at least 70% (in which case validity 'within the same academic year' / 'up to and including the resit' is reasonable and therefore Met).",
+      "na_when": "the course has no partial components (single 100% assessment, or a thesis with no partial results)",
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "bonus_scheme_condition",
-      "text": "If a bonus scheme is included, it is stated that the bonus is only awarded if the final grade without the bonus is at least a 5.50 or higher;"
+      "number": 12,
+      "text": "If a bonus scheme is included, it is stated that the bonus is only awarded if the final grade without the bonus is at least a 5.50 or higher;",
+      "met_when": "A bonus scheme is present AND it states the bonus only applies if the final grade without bonus is at least 5.50.",
+      "na_when": "no bonus scheme / bonus points are mentioned anywhere in the syllabus",
+      "course_type_na": ["thesis", "writing"]
     },
     {
       "id": "bonus_scheme_maximum",
-      "text": "The bonus may contain a maximum of 0.5 points and expires at the end of the academic year."
+      "number": 13,
+      "text": "The bonus may contain a maximum of 0.5 points and expires at the end of the academic year.",
+      "met_when": "A bonus scheme is present AND it states the bonus is at most 0.5 points and expires at the end of the academic year.",
+      "na_when": "no bonus scheme / bonus points are mentioned anywhere in the syllabus",
+      "course_type_na": ["thesis", "writing"]
     }
   ]
 }

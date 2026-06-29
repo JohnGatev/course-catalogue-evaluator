@@ -124,10 +124,13 @@ Next, use `requirements_json` to perform a compliance check.
 
 2. **Check compliance against the extracted course information**
    For each requirement:
-   - Determine whether it is **met** or **not met**, based exclusively on:
+   - Determine a status of **Met**, **Partial**, **Not Met**, or **N/A**, based exclusively on:
      - The structured fields you populated above; and
-     - The raw `course_pdf_text` (for literal quotes).
-   - Do **not** assume compliance if the relevant information is missing or unclear. In those cases: requirement is **not met**.
+     - The raw `course_pdf_text` (for literal quotes); and
+     - The per-requirement `met_when` / `na_when` / `applies_when` / `course_type_na` fields in the requirements JSON.
+   - Use **N/A** whenever a requirement's `na_when` trigger holds or its `applies_when` condition is false (e.g. no bonus scheme, no attendance requirement, no timed exam, no partial results, uncontrolled assessment ≤ 25% for the conditional criteria). Do **not** mark such cases Not Met.
+   - Use **Partial** when the required information is partially present but incomplete.
+   - Use **Not Met** only when applicable information is entirely absent or directly contradicts the requirement.
 
 3. **Produce a requirements compliance table**
 
@@ -135,13 +138,12 @@ Create a markdown table with the columns:
 
 - `Requirement`
   - The readable text of the requirement (from JSON).
-- `Checkbox`
-  - Use `☑` for "met" and `☐` for "not met".
+- `Status`
+  - One of: `Met`, `Partial`, `Not Met`, `N/A`.
 - `Quote from catalogue text`
-  - If met: provide a short, relevant quote from the course text demonstrating compliance.
-  - If not met:
-    - Quote the most related text **and** briefly explain why it is still insufficient, or
-    - If there is no related text at all, write: "No relevant text found."
+  - If Met/Partial: provide a short, relevant verbatim quote from the course text.
+  - If Not Met: quote the most related text **and** briefly explain why it is insufficient, or if there is no related text at all, write: "No relevant text found."
+  - If N/A: leave empty.
 
 The table must contain **all** requirements from `requirements_json`, each in a separate row.
 
@@ -159,7 +161,7 @@ Guidelines:
 
 2. **Content of the email**
    - Briefly state the purpose: that you have assessed the course description against the formal document "requirements course catalogue".
-   - Mention **only** the requirements that are **not met** (i.e. the rows with `☐` in the table). For each unmet requirement:
+   - Mention **only** the requirements with status `Not Met` or `Partial`. Do not mention `Met` or `N/A` rows. For each such requirement:
      - Quote the text of the requirement (summarized or literal, depending on the JSON).
      - Summarize what is missing or not in line in the current course description.
      - Explain what needs to be added or changed in the Course Catalogue course description to resolve this, using the wording from the requirement as a guideline (but not blindly copying).
@@ -192,7 +194,7 @@ Always provide the output in **markdown**, in exactly this order:
      - `### Remarks`
 
 2. **Section 2: Requirements compliance table**
-   - A markdown table with the columns: `Requirement | Checkbox | Quote from catalogue text`.
+   - A markdown table with the columns: `Requirement | Status | Quote from catalogue text`.
 
 3. **Section 3: Email to course coordinator**
    - A complete Dutch email text, ready to send (without an email address).
@@ -202,6 +204,6 @@ Always provide the output in **markdown**, in exactly this order:
 ## 6. General rules
 
 - Do not invent details that do not appear in the course text or the requirements JSON.
-- If you are not sure whether a requirement is met due to unclear wording, treat the requirement as **not met** and briefly explain the ambiguity in the quote/explanation.
+- Respect each requirement's `met_when` / `na_when` / `applies_when` conditions: a requirement that does not apply is **N/A**, not Not Met. Reserve Not Met for cases where applicable information is genuinely absent or contradicts the requirement.
 - Keep your explanations concise but precise.
 - Do not refer to these instructions or the "system prompt" in the output.
