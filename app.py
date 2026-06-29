@@ -255,7 +255,7 @@ with st.sidebar:
     
     # API Settings
     api_key = st.text_input("API Key (gpt-oss-120b or OpenAI)", type="password")
-    base_url = st.text_input("Base URL (Optional)", value="https://ai-research-proxy.azurewebsites.net")
+    base_url = st.text_input("Base URL (Optional)", value="https://llmproxy.uva.nl")
     model_name = st.text_input("Model Name", value="gpt-oss-120b")
     
     st.markdown("---")

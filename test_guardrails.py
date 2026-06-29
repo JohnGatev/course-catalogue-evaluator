@@ -133,6 +133,29 @@ def test_no_override_when_breakdown_unparseable():
     assert _status(data, "uncontrolled_conditions_maximum") == "Partial"
 
 
+def test_c1_na_when_100pct_group():
+    # Honours Course in Impact Investing: 100% group case — no exam → C1 and C2 N/A
+    text = "The final grade is based 100% on a group case, which covers the development of an impact investment product."
+    data = {"requirements_compliance_table": [
+        _row("exam_assessment_method"),
+        _row("resit_assessment_method"),
+    ]}
+    run(data, text)
+    assert _status(data, "exam_assessment_method") == "N/A"
+    assert _status(data, "resit_assessment_method") == "N/A"
+
+
+def test_c1_not_overridden_when_exam_present():
+    # Mixed course with exam — guardrail must not touch C1
+    text = "Individual written exam (open questions, 2 hours, 70%). Group assignment (30%)."
+    data = {"requirements_compliance_table": [
+        _row("exam_assessment_method", status="Met"),
+        _row("resit_assessment_method"),
+    ]}
+    run(data, text)
+    assert _status(data, "exam_assessment_method") == "Met"
+
+
 if __name__ == "__main__":
     import sys
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

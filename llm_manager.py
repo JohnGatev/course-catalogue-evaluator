@@ -45,7 +45,7 @@ Compute: uncontrolled_total = sum of UNCONTROLLED weights; individual_total = su
 
 GENERAL N/A RULE: If a requirement's na_when trigger holds, or its applies_when condition is false, output status "N/A" with an empty quote. Never output "Not Met" in those cases.
 
-exam_assessment_method: Met when method + question type (for exam components) + weighting of partial and final exams are stated. Do NOT demand a question type for assignments/projects.
+exam_assessment_method: N/A when the course has no timed/invigilated exam component at all (e.g. 100% group project, 100% take-home assignment — no controlled exam exists). Met when method + question type for the exam component(s) + weighting of partial and final exams are stated. Do NOT demand a question type for assignments/projects.
 
 resit_assessment_method: Met when the resit method+weighting are described. If the text says the resit has the SAME format as the original/regular exam, that is sufficient → Met. If exam_assessment_method is Met and the resit mirrors it → Met. N/A when there is no resittable exam/partial component.
 
@@ -309,8 +309,16 @@ def _apply_guardrails(data, course_text, requirements_text):
     comps = _parse_components(course_text or "")
     total = sum(w for w, _, _ in comps)
     if comps and 90.0 <= total <= 110.0:
+        controlled_total = sum(w for w, c, _ in comps if c == "controlled")
         uncontrolled_total = sum(w for w, c, _ in comps if c == "uncontrolled")
         individual_total = sum(w for w, _, g in comps if not g)
+
+        # No exam component at all → C1 and C2 are N/A
+        # Conservative: only fires when all parseable weight is uncontrolled (no unknowns)
+        if controlled_total == 0 and uncontrolled_total >= 90:
+            for cid in ("exam_assessment_method", "resit_assessment_method"):
+                if cid in by_id:
+                    _set_row(by_id[cid], "N/A")
 
         # 25% cap on uncontrolled assessment
         if "uncontrolled_conditions_maximum" in by_id:

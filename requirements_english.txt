@@ -29,7 +29,7 @@
       "number": 1,
       "text": "A description of the assessment method (including the type of questions) of the exam is included, including the weighting factor of the partial exams and the final exam;",
       "met_when": "The assessment method, the type of questions for the exam component(s), and the weighting factors of partial and final exams are stated. The question type only needs to be given for exam-type components, not for assignments/projects.",
-      "na_when": null,
+      "na_when": "course has no timed/invigilated exam component (all graded components are assignments, projects, or group work)",
       "course_type_na": ["thesis", "writing"]
     },
     {
